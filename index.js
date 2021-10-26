@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 const port = 3000
+const path = require('path')
+const methodOverride = require('method-override')
 
 //Mongoose connection to DB
 const mongoose = require('mongoose')
@@ -13,10 +15,17 @@ async function main() {
 const Movie = require('./models/movie');
 
 
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
 
-app.get('/', (req, res) => {
-    res.send('HELLO WORLD!')
+//Middleware
+app.use(express.urlencoded({extended : true}))
+app.use(methodOverride('_method'))
+
+app.get('/movies', async (req, res) => {
+  const movies = await Movie.find({})
+    res.render('movies/index', { movies })
 })
 
 app.listen(port, () => {
