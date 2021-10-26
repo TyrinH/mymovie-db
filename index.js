@@ -6,6 +6,9 @@ const port = 3000
 const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost:27017/myMovie');
 
+const Movie = require('./models/movie');
+
+
 
 
 app.get('/', (req, res) => {
