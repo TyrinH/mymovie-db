@@ -9,14 +9,41 @@ async function main() {
 
 const seedMovies = [
     {
-        title: 'Godzilla',
-        rating: 5.4,
-        release: 1998
+        title: 'Spirited Away',
+        rating: 8.6,
+        release: 2001
     },
     {
         title: 'Interstellar',
         rating: 8.6,
         release: 2014
     },
+    {
+        title: 'Apocalypto',
+        rating: 7.8,
+        release: 2006
     
+    },
+    {
+        title: 'Walk the Line',
+        rating: 7.8,
+        release: 2005
+    },
+    {
+        title: 'Rocketman',
+        rating: 7.3,
+        release: 2019
+    },
+    {
+        title: 'Selena',
+        rating: 6.8,
+        release: 1997
+    },
+    {
+        title: 'Bird Box',
+        rating: 6.6,
+        release: 2018
+    }
 ]
+
+Movie.insertMany(seedMovies);
