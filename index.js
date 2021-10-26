@@ -4,7 +4,11 @@ const port = 3000
 
 //Mongoose connection to DB
 const mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost:27017/myMovie');
+main().catch(err => console.log(err));
+
+async function main() {
+  await mongoose.connect('mongodb://localhost:27017/myMovie');
+}
 
 const Movie = require('./models/movie');
 
