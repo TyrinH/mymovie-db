@@ -43,6 +43,18 @@ app.get('/movies/:id', async (req, res) => {
   res.render('movies/show', { movie })
 })
 
+app.get('/movies/:id/edit', async (req, res) => {
+  const movie = await Movie.findById(req.params.id)
+  res.render('movies/edit', { movie })
+})
+
+app.put('/movies/:id', async (req, res) => {
+  const { id } = req.params;
+  const movie = await Movie.findByIdAndUpdate(id, req.body, {runValidators: true, new: true})
+  res.redirect(`/movies/${movie._id}`)
+
+})
+
 
 
 app.listen(port, () => {

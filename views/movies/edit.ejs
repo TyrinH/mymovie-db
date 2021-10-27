@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Movie</title>
+</head>
+<body>
+    <form action="/movies/<%=movie._id %>?_method=PUT" method=post>
+        <label for="title">Movie title</label>
+        <input type="text" name="title" placeholder="movie name" value="<%=movie.title%> ">
+        <label for="rating">movie rating</label>
+        <input type="text" name="rating" placeholder="movie rating" value="<%=movie.rating  %> ">
+        <label for="release">movie release date</label>
+        <input type="text" name="release" placeholder="movie release date" value="<%=movie.release  %> ">
+        <button>Update Movie</button>
+    </form>
+
+    <a href="/movies">All movies</a>
+</body>
+</html>
