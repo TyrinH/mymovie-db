@@ -38,8 +38,9 @@ app.post('/movies', async (req, res) => {
   res.redirect(`movies/${newMovie._id}`)
 })
 
-app.post('/movies', (req, res) => {
-
+app.get('/movies/:id', async (req, res) => {
+  const movie = await Movie.findById(req.params.id)
+  res.render('movies/show', { movie })
 })
 
 
