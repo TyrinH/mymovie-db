@@ -55,6 +55,13 @@ app.put('/movies/:id', async (req, res) => {
 
 })
 
+app.delete('/movies/:id', async (req, res) => {
+  const { id } = req.params;
+  await Movie.findByIdAndDelete(id)
+  res.redirect('/movies')
+
+})
+
 
 
 app.listen(port, () => {

@@ -11,6 +11,12 @@
     <h2> Movie rating: <%=movie.rating%></h2>
     <h2>Movie release date: <%=movie.release%> </h2>
 
+    <p>
+        <form action="/movies/<%=movie._id  %>?_method=DELETE " method=POST>
+            <button>Delete</button>
+        </form>
+    </p>
+
     <a href="/movies/<%= movie._id%>/edit">Edit</a>
 </body>
 </html>
