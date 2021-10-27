@@ -32,6 +32,16 @@ app.get('/movies/new', (req, res) => {
   res.render('movies/new')
 })
 
+app.post('/movies', async (req, res) => {
+  const newMovie = new Movie(req.body)
+  await newMovie.save();
+  res.redirect(`movies/${newMovie._id}`)
+})
+
+app.post('/movies', (req, res) => {
+
+})
+
 
 
 app.listen(port, () => {
