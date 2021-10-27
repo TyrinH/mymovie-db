@@ -25,8 +25,14 @@ app.use(methodOverride('_method'))
 
 app.get('/movies', async (req, res) => {
   const movies = await Movie.find({})
-    res.render('movies/index', { movies })
+  res.render('movies/index', { movies })
 })
+
+app.get('/movies/new', (req, res) => {
+  res.render('movies/new')
+})
+
+
 
 app.listen(port, () => {
     console.log('CONNECTION ESTABLISHED ON PORT 3000')
