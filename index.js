@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const port = 3000
 const path = require('path')
+const ejsMate = require('ejs-mate')
 const methodOverride = require('method-override')
 
 //Mongoose connection to DB
@@ -15,6 +16,7 @@ async function main() {
 const Movie = require('./models/movie');
 
 
+app.engine('ejs', ejsMate)
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
