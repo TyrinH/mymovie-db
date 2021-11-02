@@ -1,13 +1,21 @@
 <% layout('layouts/boilerplate')%> 
-
-    <h1> <%=movie.title %> </h1>
-    <h2> Movie rating: <%=movie.rating%></h2>
-    <h2>Movie release date: <%=movie.release%> </h2>
-
-    <p>
-        <form action="/movies/<%=movie._id  %>?_method=DELETE " method=POST>
-            <button>Delete</button>
-        </form>
-    </p>
-
-    <a href="/movies/<%= movie._id%>/edit">Edit</a>
+<div class="row">
+    <div class="col-6 offset-3">
+        <div class="card">
+            <div class="card-body">
+              <h5 class="card-title"><%=movie.title%> </h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">Movie IMDB rating: <%=movie.rating  %> </li>
+              <li class="list-group-item">Movie release date: <%=movie.release  %> </li>
+            </ul>
+            <div class="card-body">
+                <a href="/movies/<%= movie._id%>/edit" class="card-link btn btn-info">Edit</a>
+              <a href="#" class="card-link"> <form class="d-inline" action="/movies/<%=movie._id  %>?_method=DELETE " method=POST>
+                <button type="button" class="btn btn-danger">Delete</button>
+            </form></a>
+            </div>
+          </div>
+    </div>
+</div>
