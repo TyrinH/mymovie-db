@@ -1,14 +1,18 @@
 <% layout('layouts/boilerplate')%> 
 
-    <h1>Add a new movie</h1>
-    <form action="/movies" method=post>
-        <label for="title">Movie title</label>
-        <input type="text" name="title" placeholder="movie name">
-        <label for="rating">movie rating</label>
-        <input type="text" name="rating" placeholder="movie rating">
-        <label for="release">movie release date</label>
-        <input type="text" name="release" placeholder="movie release date">
-        <button>submit</button>
-    </form>
+<h1 class="display-3 text-center">Add a new movie</h1>
+   <div class="row">
+       <div class="col-6 offset-3">
+        <form action="/movies" method=post>
+            <label class="form-label"for="title">Movie title</label>
+            <input class="form-control"type="text" name="title" placeholder="movie name">
+            <label class="form-label"for="rating">movie rating</label>
+            <input class="form-control"type="text" name="rating" placeholder="movie rating">
+            <label class="form-label" for="release">movie release date</label>
+            <input class="form-control"type="text" name="release" placeholder="movie release date">
+            <button class="btn btn-success mt-3">submit</button>
+        </form>
+       </div>
+   </div>
 
-    <a href="/movies">All movies</a>
+    
