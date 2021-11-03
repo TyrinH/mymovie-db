@@ -3,6 +3,7 @@ const app = express()
 const port = 3000
 const path = require('path')
 const ejsMate = require('ejs-mate')
+const { movieSchema } = require('./schemas.js')
 const catchAsync = require('./utils/catchAsync')
 const ExpressError = require('./utils/ExpressError')
 const methodOverride = require('method-override')
@@ -15,6 +16,7 @@ async function main() {
   await mongoose.connect('mongodb://localhost:27017/myMovie');
 }
 
+//Movie Schema
 const Movie = require('./models/movie');
 
 
@@ -28,6 +30,16 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({extended : true}))
 app.use(methodOverride('_method'))
 
+const validateMovie = (req, res, next) => {
+  const { error } = movieSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map(el => el.message).join(',')
+    throw new ExpressError(msg, 400)
+  } else {
+    next();
+  }
+}
+
 app.get('/movies', catchAsync(async (req, res) => {
   const movies = await Movie.find({})
   res.render('movies/index', { movies })
@@ -37,7 +49,7 @@ app.get('/movies/new', (req, res) => {
   res.render('movies/new')
 })
 
-app.post('/movies', catchAsync(async (req, res) => {
+app.post('/movies', validateMovie, catchAsync(async (req, res, next) => {
   const newMovie = new Movie(req.body)
   await newMovie.save();
   res.redirect(`movies/${newMovie._id}`)
@@ -53,7 +65,7 @@ app.get('/movies/:id/edit', catchAsync(async (req, res) => {
   res.render('movies/edit', { movie })
 }))
 
-app.put('/movies/:id', catchAsync(async (req, res) => {
+app.put('/movies/:id', validateMovie, catchAsync(async (req, res) => {
   const { id } = req.params;
   const movie = await Movie.findByIdAndUpdate(id, req.body, {runValidators: true, new: true})
   res.redirect(`/movies/${movie._id}`)
