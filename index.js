@@ -7,6 +7,7 @@ const { movieSchema } = require('./schemas.js')
 const catchAsync = require('./utils/catchAsync')
 const ExpressError = require('./utils/ExpressError')
 const methodOverride = require('method-override')
+const Review = require('./models/review')
 
 //Mongoose connection to DB
 const mongoose = require('mongoose')
@@ -77,6 +78,15 @@ app.delete('/movies/:id', catchAsync(async (req, res) => {
   await Movie.findByIdAndDelete(id)
   res.redirect('/movies')
 
+}))
+
+app.post('/movies/:id/reviews', catchAsync(async (req, res) => {
+  const movie = await Movie.findById(req.params.id);
+  const review = new Review(req.body.review);
+  movie.reviews.push(review);
+  await review.save();
+  await movie.save();
+  res.redirect(`/movies/${movie._id}`)
 }))
 
 app.all('*', (req, res, next) => {
