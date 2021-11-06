@@ -3,7 +3,7 @@ const app = express()
 const port = 3000
 const path = require('path')
 const ejsMate = require('ejs-mate')
-const { movieSchema } = require('./schemas.js')
+const { movieSchema, reviewSchema } = require('./schemas.js')
 const catchAsync = require('./utils/catchAsync')
 const ExpressError = require('./utils/ExpressError')
 const methodOverride = require('method-override')
@@ -33,6 +33,16 @@ app.use(methodOverride('_method'))
 
 const validateMovie = (req, res, next) => {
   const { error } = movieSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map(el => el.message).join(',')
+    throw new ExpressError(msg, 400)
+  } else {
+    next();
+  }
+}
+
+const validateReview = (req, res, next) => {
+  const { error } = reviewSchema.validate(req.body);
   if (error) {
     const msg = error.details.map(el => el.message).join(',')
     throw new ExpressError(msg, 400)
@@ -80,7 +90,7 @@ app.delete('/movies/:id', catchAsync(async (req, res) => {
 
 }))
 
-app.post('/movies/:id/reviews', catchAsync(async (req, res) => {
+app.post('/movies/:id/reviews', validateReview, catchAsync(async (req, res) => {
   const movie = await Movie.findById(req.params.id);
   const review = new Review(req.body.review);
   movie.reviews.push(review);
