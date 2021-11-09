@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Review = require('./review')
 const Schema = mongoose.Schema
 
 const movieSchema = new Schema({
@@ -22,6 +23,18 @@ const movieSchema = new Schema({
     ]
 })
 
+movieSchema.post('findOneAndDelete', async function (doc) {
+    if(doc){
+        await Review.remove({
+            _id: {
+                $in: doc.reviews
+            }
+        })
+    }
+})
+
 const Movie = mongoose.model('Movie', movieSchema);
+
+
 
 module.exports = Movie;
