@@ -6,4 +6,6 @@ const reviewSchema = new Schema ({
     rating: Number
 })
 
-module.exports = mongoose.model("Reveiew", reviewSchema);
+const Review = mongoose.model('Review', reviewSchema);
+
+module.exports = Review;

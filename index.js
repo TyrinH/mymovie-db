@@ -67,7 +67,7 @@ app.post('/movies', validateMovie, catchAsync(async (req, res, next) => {
 }))
 
 app.get('/movies/:id', catchAsync(async (req, res) => {
-  const movie = await Movie.findById(req.params.id)
+  const movie = await Movie.findById(req.params.id).populate('reviews');
   res.render('movies/show', { movie })
 }))
 
@@ -91,12 +91,13 @@ app.delete('/movies/:id', catchAsync(async (req, res) => {
 }))
 
 app.post('/movies/:id/reviews', validateReview, catchAsync(async (req, res) => {
-  const movie = await Movie.findById(req.params.id);
-  const review = new Review(req.body.review);
+  const movie = await Movie.findById(req.params.id)
+  const review = new Review(req.body);
   movie.reviews.push(review);
   await review.save();
   await movie.save();
-  res.redirect(`/movies/${movie._id}`)
+  
+  res.redirect(`/movies/${movie._id}`);
 }))
 
 app.all('*', (req, res, next) => {
