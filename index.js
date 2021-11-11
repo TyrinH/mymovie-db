@@ -10,6 +10,7 @@ const methodOverride = require('method-override')
 const Review = require('./models/review')
 
 const movies = require('./routes/movies')
+const reviews = require('./routes/reviews')
 
 //Mongoose connection to DB
 const mongoose = require('mongoose')
@@ -33,34 +34,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({extended : true}))
 app.use(methodOverride('_method'))
 
-const validateReview = (req, res, next) => {
-  const { error } = reviewSchema.validate(req.body);
-  if (error) {
-    const msg = error.details.map(el => el.message).join(',')
-    throw new ExpressError(msg, 400)
-  } else {
-    next();
-  }
-}
-
 app.use('/movies', movies)
-
-app.post('/movies/:id/reviews', validateReview, catchAsync(async (req, res) => {
-  const movie = await Movie.findById(req.params.id)
-  const review = new Review(req.body);
-  movie.reviews.push(review);
-  await review.save();
-  await movie.save();
-  
-  res.redirect(`/movies/${movie._id}`);
-}))
-
-app.delete('/movies/:id/reviews/:reviewId', catchAsync(async(req, res)=>{
-  const { id, reviewId } = req.params;
-  await Movie.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-  await Review.findByIdAndDelete(reviewId);
-  res.redirect(`/movies/${id}`);
-}))
+app.use('/movies/:id/reviews', reviews)
 
 app.all('*', (req, res, next) => {
   next(new ExpressError('Page not found', 404))
