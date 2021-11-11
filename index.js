@@ -9,6 +9,8 @@ const ExpressError = require('./utils/ExpressError')
 const methodOverride = require('method-override')
 const Review = require('./models/review')
 
+const movies = require('./routes/movies')
+
 //Mongoose connection to DB
 const mongoose = require('mongoose')
 main().catch(err => console.log(err));
@@ -51,44 +53,7 @@ const validateReview = (req, res, next) => {
   }
 }
 
-app.get('/movies', catchAsync(async (req, res) => {
-  const movies = await Movie.find({})
-  res.render('movies/index', { movies })
-}))
-
-app.get('/movies/new', (req, res) => {
-  res.render('movies/new')
-})
-
-app.post('/movies', validateMovie, catchAsync(async (req, res, next) => {
-  const newMovie = new Movie(req.body)
-  await newMovie.save();
-  res.redirect(`movies/${newMovie._id}`)
-}))
-
-app.get('/movies/:id', catchAsync(async (req, res) => {
-  const movie = await Movie.findById(req.params.id).populate('reviews');
-  res.render('movies/show', { movie })
-}))
-
-app.get('/movies/:id/edit', catchAsync(async (req, res) => {
-  const movie = await Movie.findById(req.params.id)
-  res.render('movies/edit', { movie })
-}))
-
-app.put('/movies/:id', validateMovie, catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const movie = await Movie.findByIdAndUpdate(id, req.body, {runValidators: true, new: true})
-  res.redirect(`/movies/${movie._id}`)
-
-}))
-
-app.delete('/movies/:id', catchAsync(async (req, res) => {
-  const { id } = req.params;
-  await Movie.findByIdAndDelete(id)
-  res.redirect('/movies')
-
-}))
+app.use('/movies', movies)
 
 app.post('/movies/:id/reviews', validateReview, catchAsync(async (req, res) => {
   const movie = await Movie.findById(req.params.id)
