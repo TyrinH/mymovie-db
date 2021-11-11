@@ -33,16 +33,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({extended : true}))
 app.use(methodOverride('_method'))
 
-const validateMovie = (req, res, next) => {
-  const { error } = movieSchema.validate(req.body);
-  if (error) {
-    const msg = error.details.map(el => el.message).join(',')
-    throw new ExpressError(msg, 400)
-  } else {
-    next();
-  }
-}
-
 const validateReview = (req, res, next) => {
   const { error } = reviewSchema.validate(req.body);
   if (error) {
