@@ -4,11 +4,8 @@ const port = 3000
 const path = require('path')
 const ejsMate = require('ejs-mate')
 const session = require('express-session')
-const { movieSchema, reviewSchema } = require('./schemas.js')
-const catchAsync = require('./utils/catchAsync')
 const ExpressError = require('./utils/ExpressError')
 const methodOverride = require('method-override')
-const Review = require('./models/review')
 
 const movies = require('./routes/movies')
 const reviews = require('./routes/reviews')
@@ -20,9 +17,6 @@ main().catch(err => console.log(err));
 async function main() {
   await mongoose.connect('mongodb://localhost:27017/myMovie');
 }
-
-//Movie Schema
-const Movie = require('./models/movie');
 
 
 app.engine('ejs', ejsMate)
