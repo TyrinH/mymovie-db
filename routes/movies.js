@@ -31,6 +31,7 @@ router.get('/', catchAsync(async (req, res) => {
   router.post('/', validateMovie, catchAsync(async (req, res, next) => {
     const newMovie = new Movie(req.body)
     await newMovie.save();
+    req.flash('success', 'Successfully made a new movie!')
     res.redirect(`movies/${newMovie._id}`)
   }))
   
