@@ -25,6 +25,7 @@ router.post('/', validateReview, catchAsync(async (req, res) => {
     movie.reviews.push(review);
     await review.save();
     await movie.save();
+    req.flash('success', 'created new review!')
 
     res.redirect(`/movies/${movie._id}`);
 }))
@@ -33,6 +34,7 @@ router.delete('/:reviewId', catchAsync(async (req, res) => {
     const { id, reviewId } = req.params;
     await Movie.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);
+    req.flash('success', 'successfully deleted a review!')
     res.redirect(`/movies/${id}`);
 }))
 

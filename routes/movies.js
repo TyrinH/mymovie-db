@@ -48,6 +48,7 @@ router.get('/', catchAsync(async (req, res) => {
   router.put('/:id', validateMovie, catchAsync(async (req, res) => {
     const { id } = req.params;
     const movie = await Movie.findByIdAndUpdate(id, req.body, {runValidators: true, new: true})
+    req.flash('success', 'Successfully updated movie!' )
     res.redirect(`/movies/${movie._id}`)
   
   }))
@@ -55,6 +56,7 @@ router.get('/', catchAsync(async (req, res) => {
   router.delete('/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     await Movie.findByIdAndDelete(id)
+    req.flash('success', 'successfully deleted a movie!')
     res.redirect('/movies')
   
   }))
