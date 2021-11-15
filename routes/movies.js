@@ -37,11 +37,19 @@ router.get('/', catchAsync(async (req, res) => {
   
   router.get('/:id', catchAsync(async (req, res) => {
     const movie = await Movie.findById(req.params.id).populate('reviews');
+    if(!movie){
+      req.flash('error', 'Movie not found.')
+      return res.redirect('/movies')
+    }
     res.render('movies/show', { movie })
   }))
   
   router.get('/:id/edit', catchAsync(async (req, res) => {
     const movie = await Movie.findById(req.params.id)
+    if(!movie){
+      req.flash('error', 'Movie not found.')
+      return res.redirect('/movies')
+    }
     res.render('movies/edit', { movie })
   }))
   
