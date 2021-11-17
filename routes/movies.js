@@ -31,13 +31,14 @@ router.get('/new', isLoggedIn, (req, res) => {
 
 router.post('/', isLoggedIn, validateMovie, catchAsync(async (req, res, next) => {
   const newMovie = new Movie(req.body)
+  newMovie.author = req.user._id;
   await newMovie.save();
   req.flash('success', 'Successfully made a new movie!')
   res.redirect(`movies/${newMovie._id}`)
 }))
 
 router.get('/:id', catchAsync(async (req, res) => {
-  const movie = await Movie.findById(req.params.id).populate('reviews');
+  const movie = await Movie.findById(req.params.id).populate('reviews').populate('author');
   if (!movie) {
     req.flash('error', 'Movie not found.')
     return res.redirect('/movies')

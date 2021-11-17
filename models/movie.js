@@ -15,6 +15,10 @@ const movieSchema = new Schema({
         type: Number,
         required: true
     },
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     reviews: [
         {
             type: Schema.Types.ObjectId,
