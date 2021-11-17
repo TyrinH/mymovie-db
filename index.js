@@ -11,8 +11,9 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local')
 const User = require('./models/user')
 
-const movies = require('./routes/movies')
-const reviews = require('./routes/reviews')
+const moviesRoutes = require('./routes/movies')
+const reviewsRoutes = require('./routes/reviews')
+const userRoutes = require('./routes/users')
 
 //Mongoose connection to DB
 const mongoose = require('mongoose')
@@ -50,6 +51,9 @@ app.use(passport.initialize())
 app.use(passport.session())
 passport.use(new LocalStrategy(User.authenticate()))
 
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser())
+
 app.use((req, res, next) => {
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
@@ -57,8 +61,9 @@ app.use((req, res, next) => {
 })
 
 
-app.use('/movies', movies)
-app.use('/movies/:id/reviews', reviews)
+app.use('/', userRoutes)
+app.use('/movies', moviesRoutes)
+app.use('/movies/:id/reviews', reviewsRoutes)
 
 app.all('*', (req, res, next) => {
   next(new ExpressError('Page not found', 404))
