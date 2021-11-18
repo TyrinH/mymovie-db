@@ -57,9 +57,14 @@ router.get('/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
 
 router.put('/:id', isLoggedIn, validateMovie, catchAsync(async (req, res) => {
   const { id } = req.params;
-  const movie = await Movie.findByIdAndUpdate(id, req.body, { runValidators: true, new: true })
+  const movie = await Movie.findById(id);
+  if(!movie.author.equal(req.user._id)) {
+    res.flash('error', 'You do not have permission to do this')
+    return res.redirect(`/movies/${id}`);
+  }
+  const movieChange = await Movie.findByIdAndUpdate(id, req.body, { runValidators: true, new: true })
   req.flash('success', 'Successfully updated movie!')
-  res.redirect(`/movies/${movie._id}`)
+  res.redirect(`/movies/${movieChange._id}`)
 
 }))
 
