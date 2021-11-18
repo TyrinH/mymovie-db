@@ -5,6 +5,7 @@ const ExpressError = require('../utils/ExpressError')
 const Movie = require('../models/movie');
 const { movieSchema } = require('../schemas.js')
 const isLoggedIn = require('../middleware')
+const movies = require('../controllers/movies')
 
 
 const validateMovie = (req, res, next) => {
@@ -30,61 +31,18 @@ const isAuthor = async (req, res, next) => {
 
 //Routes for movies
 
-router.get('/', catchAsync(async (req, res) => {
-  const movies = await Movie.find({})
-  res.render('movies/index', { movies })
-}))
+router.get('/', catchAsync(movies.index));
 
-router.get('/new', isLoggedIn, (req, res) => {
-  res.render('movies/new')
-})
+router.get('/new', isLoggedIn, movies.renderNewForm);
 
-router.post('/', isLoggedIn, validateMovie, catchAsync(async (req, res, next) => {
-  const newMovie = new Movie(req.body)
-  newMovie.author = req.user._id;
-  await newMovie.save();
-  req.flash('success', 'Successfully made a new movie!')
-  res.redirect(`movies/${newMovie._id}`)
-}))
+router.post('/', isLoggedIn, validateMovie, catchAsync(movies.createMovie));
 
-router.get('/:id', catchAsync(async (req, res) => {
-  const movie = await Movie.findById(req.params.id).populate({
-    path: 'reviews',
-    populate: {
-      path:'author'
-    }
-    }).populate('author');
-  if (!movie) {
-    req.flash('error', 'Movie not found.')
-    return res.redirect('/movies')
-  }
-  res.render('movies/show', { movie })
-}))
+router.get('/:id', catchAsync(movies.showMovie));
 
-router.get('/:id/edit', isLoggedIn, isAuthor,  catchAsync(async (req, res) => {
-  const movie = await Movie.findById(req.params.id)
-  if (!movie) {
-    req.flash('error', 'Movie not found.')
-    return res.redirect('/movies')
-  }
-  res.render('movies/edit', { movie })
-}))
+router.get('/:id/edit', isLoggedIn, isAuthor,  catchAsync(movies.renderEditForm));
 
-router.put('/:id', isLoggedIn, isAuthor, validateMovie, catchAsync(async (req, res) => {
-  const { id } = req.params;
+router.put('/:id', isLoggedIn, isAuthor, validateMovie, catchAsync(movies.editMovie))
 
-  const movieChange = await Movie.findByIdAndUpdate(id, req.body, { runValidators: true, new: true })
-  req.flash('success', 'Successfully updated movie!')
-  res.redirect(`/movies/${movieChange._id}`)
-
-}))
-
-router.delete('/:id', isAuthor, catchAsync(async (req, res) => {
-  const { id } = req.params;
-  await Movie.findByIdAndDelete(id)
-  req.flash('success', 'successfully deleted a movie!')
-  res.redirect('/movies')
-
-}))
+router.delete('/:id', isAuthor, catchAsync(movies.deleteMovie))
 
 module.exports = router;
