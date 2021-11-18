@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync')
 const Movie = require('../models/movie');
 const Review = require('../models/review')
 const { movieSchema, reviewSchema } = require('../schemas.js')
+const isLoggedIn = require('../middleware')
 
 const validateReview = (req, res, next) => {
     const { error } = reviewSchema.validate(req.body);
@@ -19,9 +20,10 @@ const validateReview = (req, res, next) => {
 
 //Routes for review model
 
-router.post('/', validateReview, catchAsync(async (req, res) => {
+router.post('/', isLoggedIn, validateReview, catchAsync(async (req, res) => {
     const movie = await Movie.findById(req.params.id)
     const review = new Review(req.body);
+    review.author = req.user._id;
     movie.reviews.push(review);
     await review.save();
     await movie.save();
@@ -30,7 +32,7 @@ router.post('/', validateReview, catchAsync(async (req, res) => {
     res.redirect(`/movies/${movie._id}`);
 }))
 
-router.delete('/:reviewId', catchAsync(async (req, res) => {
+router.delete('/:reviewId', isLoggedIn, catchAsync(async (req, res) => {
     const { id, reviewId } = req.params;
     await Movie.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);
