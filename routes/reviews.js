@@ -6,6 +6,8 @@ const Review = require('../models/review')
 const { movieSchema, reviewSchema } = require('../schemas.js')
 const isLoggedIn = require('../middleware')
 const reviews = require('../controllers/reviews')
+const ExpressError = require('../utils/ExpressError')
+
 
 const validateReview = (req, res, next) => {
     const { error } = reviewSchema.validate(req.body);
