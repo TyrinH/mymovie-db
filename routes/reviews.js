@@ -16,6 +16,17 @@ const validateReview = (req, res, next) => {
     }
 }
 
+const isReviewAuthor = async (req, res, next) => {
+    const { id, reviewId } = req.params
+    const review = await Review.findById(reviewId);
+    if (!review.author.equals(req.user._id)) {
+      req.flash('error', 'You do not have permission to do this')
+      return res.redirect(`/movies/${id}`);
+    }
+    next();
+  }
+  
+
 
 
 //Routes for review model
@@ -32,7 +43,7 @@ router.post('/', isLoggedIn, validateReview, catchAsync(async (req, res) => {
     res.redirect(`/movies/${movie._id}`);
 }))
 
-router.delete('/:reviewId', isLoggedIn, catchAsync(async (req, res) => {
+router.delete('/:reviewId', isLoggedIn, isReviewAuthor, catchAsync(async (req, res) => {
     const { id, reviewId } = req.params;
     await Movie.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);

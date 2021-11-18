@@ -48,7 +48,12 @@ router.post('/', isLoggedIn, validateMovie, catchAsync(async (req, res, next) =>
 }))
 
 router.get('/:id', catchAsync(async (req, res) => {
-  const movie = await Movie.findById(req.params.id).populate('reviews').populate('author');
+  const movie = await Movie.findById(req.params.id).populate({
+    path: 'reviews',
+    populate: {
+      path:'author'
+    }
+    }).populate('author');
   if (!movie) {
     req.flash('error', 'Movie not found.')
     return res.redirect('/movies')
