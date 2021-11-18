@@ -31,18 +31,22 @@ const isAuthor = async (req, res, next) => {
 
 //Routes for movies
 
-router.get('/', catchAsync(movies.index));
+router.route('/')
+  .get(catchAsync(movies.index))
+  .post(isLoggedIn, validateMovie, catchAsync(movies.createMovie))
+
 
 router.get('/new', isLoggedIn, movies.renderNewForm);
 
-router.post('/', isLoggedIn, validateMovie, catchAsync(movies.createMovie));
+router.route('/:id')
+  .get(catchAsync(movies.showMovie))
+  .put(isLoggedIn, isAuthor, validateMovie, catchAsync(movies.editMovie))
+  .delete(isAuthor, catchAsync(movies.deleteMovie))
 
-router.get('/:id', catchAsync(movies.showMovie));
+
 
 router.get('/:id/edit', isLoggedIn, isAuthor,  catchAsync(movies.renderEditForm));
 
-router.put('/:id', isLoggedIn, isAuthor, validateMovie, catchAsync(movies.editMovie))
 
-router.delete('/:id', isAuthor, catchAsync(movies.deleteMovie))
 
 module.exports = router;
