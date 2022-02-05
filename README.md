@@ -12,7 +12,7 @@ This project was created using:
 - Express
 - Mongoose
 
-## Live showing of this proect:
+## Live showing of this project:
 
 
 [MyMovieDB] (http://warm-sands-11340.herokuapp.com/movies#)
