@@ -1,7 +1,6 @@
-// const mongoose = require('mongoose')
-const Review = require('./review')
-const Schema = mongoose.Schema
-
+import mongoose from 'mongoose';
+const review = require('../models/review.js');
+const Schema = mongoose.Schema;
 const movieSchema = new Schema({
     title: {
         type: String,
@@ -25,20 +24,17 @@ const movieSchema = new Schema({
             ref: 'Review'
         }
     ]
-})
-
+});
 movieSchema.post('findOneAndDelete', async function (doc) {
-    if(doc){
-        await Review.deleteMany({
+    if (doc) {
+        await review.deleteMany({
             _id: {
                 $in: doc.reviews
             }
-        })
+        });
     }
-})
-
-const Movie = mongoose.model('Movie', movieSchema);
-
-
+});
+export default mongoose.model('Movie', movieSchema);
+// const Movie = mongoose.model('Movie', movieSchema);
 // export default Movie;
-module.exports = Movie;
+// module.exports = Movie;
